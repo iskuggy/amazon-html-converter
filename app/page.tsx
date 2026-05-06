@@ -317,6 +317,10 @@ export default function AmazonHtmlConverter() {
               <FileText className="mr-2 h-4 w-4" />
               示例
             </Button>
+            <Button variant="outline" onClick={pasteAsPlainText} className="rounded-xl">
+              <RotateCcw className="mr-2 h-4 w-4" />
+              剪贴板转纯文本
+            </Button>
             <Button variant="outline" onClick={clearAll} className="rounded-xl border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700">
               <Trash2 className="mr-2 h-4 w-4" />
               清空内容
@@ -350,9 +354,6 @@ export default function AmazonHtmlConverter() {
                 </Button>
                 <Separator orientation="vertical" className="mx-1 h-6" />
                 <Button variant="ghost" size="sm" onMouseDown={keepEditorSelection} onClick={insertLineBreak} className="rounded-lg">换行</Button>
-                <Button variant="ghost" size="sm" onClick={pasteAsPlainText} className="rounded-lg">
-                  <RotateCcw className="mr-2 h-4 w-4" />剪贴板转纯文本
-                </Button>
               </div>
               <div
                 ref={editorRef}
