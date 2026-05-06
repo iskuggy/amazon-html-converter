@@ -322,78 +322,73 @@ export default function AmazonHtmlConverter() {
           </div>
         </section>
 
-        <Card className="relative z-30 mb-5 overflow-visible rounded-3xl border-slate-200 shadow-sm">
-          <CardContent className="flex flex-wrap items-center gap-2 overflow-visible p-3">
-            <span className="px-2 text-sm font-medium text-slate-500">格式工具</span>
-            <Separator orientation="vertical" className="mx-1 h-6" />
-            <Button variant="ghost" size="sm" onMouseDown={keepEditorSelection} onClick={() => runCommand("bold")} className="rounded-xl">
-              <Bold className="mr-2 h-4 w-4" />加粗
-            </Button>
-            <Button variant="ghost" size="sm" onMouseDown={keepEditorSelection} onClick={() => runCommand("italic")} className="rounded-xl">
-              <Italic className="mr-2 h-4 w-4" />斜体
-            </Button>
-            <Separator orientation="vertical" className="mx-1 h-6" />
-            <Button variant="ghost" size="sm" onMouseDown={keepEditorSelection} onClick={() => runCommand("insertUnorderedList")} className="rounded-xl">
-              <List className="mr-2 h-4 w-4" />项目符号
-            </Button>
-            <Button variant="ghost" size="sm" onMouseDown={keepEditorSelection} onClick={() => runCommand("insertOrderedList")} className="rounded-xl">
-              <ListOrdered className="mr-2 h-4 w-4" />编号列表
-            </Button>
-            <Separator orientation="vertical" className="mx-1 h-6" />
-            <Button variant="ghost" size="sm" onMouseDown={keepEditorSelection} onClick={insertLineBreak} className="rounded-xl">插入换行</Button>
-            <div className="relative">
-              <Button
-                variant="ghost"
-                size="sm"
-                onMouseDown={keepEditorSelection}
-                onClick={() => setEmojiOpen((open) => !open)}
-                className="rounded-xl"
-                aria-expanded={emojiOpen}
-              >
-                <Smile className="mr-2 h-4 w-4" />Emoji
-              </Button>
-              {emojiOpen ? (
-                <div
-                  className="absolute left-0 top-full z-50 mt-2 w-[min(380px,calc(100vw-3rem))] rounded-2xl border border-slate-200 bg-white p-3 shadow-xl"
-                  onMouseDown={(event) => event.preventDefault()}
-                >
-                  {emojiGroups.map((group) => (
-                    <div key={group.title} className="mb-3 last:mb-0">
-                      <div className="mb-2 px-1 text-xs font-medium text-slate-500">{group.title}</div>
-                      <div className="grid grid-cols-8 gap-1.5">
-                        {group.emojis.map((emoji) => (
-                          <button
-                            key={`${group.title}-${emoji}`}
-                            type="button"
-                            onClick={() => insertEmoji(emoji)}
-                            className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-lg transition hover:border-brand hover:bg-slate-50"
-                            aria-label={`插入 ${emoji}`}
-                          >
-                            {emoji}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : null}
-            </div>
-            <Button variant="ghost" size="sm" onClick={pasteAsPlainText} className="rounded-xl">
-              <RotateCcw className="mr-2 h-4 w-4" />剪贴板转纯文本
-            </Button>
-          </CardContent>
-        </Card>
-
         <section className="grid gap-5 lg:grid-cols-2">
-          <Card className="overflow-hidden rounded-3xl border-slate-200 shadow-sm">
-            <CardHeader className="flex flex-row items-start justify-between border-b bg-white px-5 py-4">
+          <Card className="relative z-30 overflow-visible rounded-3xl border-slate-200 shadow-sm">
+            <CardHeader className="flex flex-row items-start justify-between bg-white px-5 py-4">
               <div>
                 <CardTitle className="text-base">粘贴文案</CardTitle>
                 <p className="mt-1 text-xs text-slate-500">支持从 Word、飞书、网页或 ChatGPT 直接复制粘贴</p>
               </div>
               <Badge variant="outline" className="rounded-full">输入区</Badge>
             </CardHeader>
-            <CardContent className="p-0">
+            <CardContent className="overflow-visible p-0">
+              <div className="flex flex-wrap items-center gap-1.5 border-y border-slate-200 bg-slate-50 px-3 py-2">
+                <Button variant="ghost" size="sm" onMouseDown={keepEditorSelection} onClick={() => runCommand("bold")} className="rounded-lg">
+                  <Bold className="mr-2 h-4 w-4" />加粗
+                </Button>
+                <Button variant="ghost" size="sm" onMouseDown={keepEditorSelection} onClick={() => runCommand("italic")} className="rounded-lg">
+                  <Italic className="mr-2 h-4 w-4" />斜体
+                </Button>
+                <Separator orientation="vertical" className="mx-1 h-6" />
+                <Button variant="ghost" size="sm" onMouseDown={keepEditorSelection} onClick={() => runCommand("insertUnorderedList")} className="rounded-lg">
+                  <List className="mr-2 h-4 w-4" />项目符号
+                </Button>
+                <Button variant="ghost" size="sm" onMouseDown={keepEditorSelection} onClick={() => runCommand("insertOrderedList")} className="rounded-lg">
+                  <ListOrdered className="mr-2 h-4 w-4" />编号列表
+                </Button>
+                <Separator orientation="vertical" className="mx-1 h-6" />
+                <Button variant="ghost" size="sm" onMouseDown={keepEditorSelection} onClick={insertLineBreak} className="rounded-lg">换行</Button>
+                <div className="relative">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onMouseDown={keepEditorSelection}
+                    onClick={() => setEmojiOpen((open) => !open)}
+                    className="rounded-lg"
+                    aria-expanded={emojiOpen}
+                  >
+                    <Smile className="mr-2 h-4 w-4" />Emoji
+                  </Button>
+                  {emojiOpen ? (
+                    <div
+                      className="absolute left-0 top-full z-50 mt-2 w-[min(380px,calc(100vw-3rem))] rounded-2xl border border-slate-200 bg-white p-3 shadow-xl"
+                      onMouseDown={(event) => event.preventDefault()}
+                    >
+                      {emojiGroups.map((group) => (
+                        <div key={group.title} className="mb-3 last:mb-0">
+                          <div className="mb-2 px-1 text-xs font-medium text-slate-500">{group.title}</div>
+                          <div className="grid grid-cols-8 gap-1.5">
+                            {group.emojis.map((emoji) => (
+                              <button
+                                key={`${group.title}-${emoji}`}
+                                type="button"
+                                onClick={() => insertEmoji(emoji)}
+                                className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-lg transition hover:border-brand hover:bg-slate-50"
+                                aria-label={`插入 ${emoji}`}
+                              >
+                                {emoji}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : null}
+                </div>
+                <Button variant="ghost" size="sm" onClick={pasteAsPlainText} className="rounded-lg">
+                  <RotateCcw className="mr-2 h-4 w-4" />剪贴板转纯文本
+                </Button>
+              </div>
               <div
                 ref={editorRef}
                 contentEditable
@@ -459,26 +454,21 @@ export default function AmazonHtmlConverter() {
                 )}
               </div>
 
-              <aside className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                <div className="mb-3 flex items-center justify-between">
-                  <div className="flex items-center text-sm font-semibold text-slate-800">
-                    <Smartphone className="mr-2 h-4 w-4" />手机 App 端
-                  </div>
-                  <Badge variant="outline" className="rounded-full bg-white text-[11px]">iPhone 17</Badge>
+              <aside className="rounded-2xl border border-slate-200 bg-white p-4">
+                <div className="mb-3 flex items-center text-sm font-semibold text-slate-800">
+                  <Smartphone className="mr-2 h-4 w-4" />手机 App 端预览
                 </div>
-                <div className="mx-auto w-full max-w-[318px] rounded-[2.25rem] bg-slate-950 p-2 shadow-2xl">
-                  <div className="relative aspect-[1206/2622] overflow-hidden rounded-[1.85rem] bg-white">
-                    <div className="absolute left-1/2 top-2 z-10 h-6 w-24 -translate-x-1/2 rounded-full bg-slate-950" />
+                <div className="mx-auto w-full max-w-[312px] rounded-[2rem] border border-slate-200 bg-white p-2 shadow-xl">
+                  <div className="relative aspect-[1206/2622] overflow-hidden rounded-[1.65rem] border border-slate-100 bg-white">
+                    <div className="absolute left-1/2 top-2 z-10 h-5 w-20 -translate-x-1/2 rounded-full bg-slate-900" />
                     <div className="flex h-full flex-col">
-                      <div className="bg-[#F8FAFB] px-5 pb-3 pt-10">
+                      <div className="border-b border-slate-100 bg-white px-5 pb-3 pt-9">
                         <div className="mb-4 flex items-center justify-between text-[11px] font-semibold text-slate-900">
                           <span>9:41</span>
                           <span className="tracking-tight">5G 100%</span>
                         </div>
-                        <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
-                          <div className="text-[11px] font-medium uppercase tracking-wide text-slate-400">Amazon</div>
-                          <div className="mt-1 text-base font-semibold leading-tight text-slate-950">Product Description</div>
-                        </div>
+                        <div className="text-[11px] font-medium uppercase tracking-wide text-slate-400">Amazon</div>
+                        <div className="mt-1 text-base font-semibold leading-tight text-slate-950">Product Description</div>
                       </div>
                       <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4">
                         {amazonHtml ? (
