@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { Copy, Trash2, FileText, Code2, Eye, Bold, Italic, List, ListOrdered, Smile, RotateCcw, Smartphone } from "lucide-react";
+import { Copy, Trash2, FileText, Code2, Eye, Bold, Italic, List, ListOrdered, Smile, RotateCcw, Smartphone, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -118,6 +118,53 @@ function formatHtml(html: string) {
     .trim();
 }
 
+function getAiSuggestions(html: string) {
+  if (!html) {
+    return ["粘贴文案后，这里会实时给出移动端可读性、结构和合规风险建议。"];
+  }
+
+  const doc = new DOMParser().parseFromString(html, "text/html");
+  const text = doc.body.textContent?.replace(/\s+/g, " ").trim() || "";
+  const suggestions: string[] = [];
+  const listItems = Array.from(doc.querySelectorAll("li"));
+  const paragraphs = Array.from(doc.querySelectorAll("p"));
+  const emojiCount = [...text].filter((char) => /\p{Emoji_Presentation}|\p{Extended_Pictographic}/u.test(char)).length;
+  const longListItems = listItems.filter((item) => (item.textContent?.trim().length || 0) > 120).length;
+  const longParagraphs = paragraphs.filter((item) => (item.textContent?.trim().length || 0) > 220).length;
+
+  if (text.length < 80) {
+    suggestions.push("内容偏短，可以补充 2-3 个核心卖点，尤其是兼容性、使用场景和维护周期。");
+  } else if (text.length > 1200) {
+    suggestions.push("内容偏长，移动端阅读压力较大。建议把长段拆成短段或列表，优先保留最影响转化的卖点。");
+  } else {
+    suggestions.push("整体长度比较适中，适合桌面和手机端阅读。");
+  }
+
+  if (listItems.length === 0) {
+    suggestions.push("建议至少使用一组项目符号，把核心卖点拆开，手机端会更容易扫读。");
+  } else if (longListItems > 0) {
+    suggestions.push(`${longListItems} 个列表项偏长，建议每条控制在 80-120 字以内。`);
+  } else {
+    suggestions.push("列表结构清晰，适合移动端快速扫读。");
+  }
+
+  if (longParagraphs > 0) {
+    suggestions.push(`${longParagraphs} 个段落偏长，建议拆成更短段落或转成项目符号。`);
+  }
+
+  if (emojiCount > 8) {
+    suggestions.push("emoji 数量偏多，可能显得促销感过强。建议只保留用于强调关键卖点的少数几个。");
+  } else if (emojiCount > 0) {
+    suggestions.push("emoji 使用量可控，注意不同站点/类目最终展示可能仍会被过滤。");
+  }
+
+  if (!/<b>/.test(html) && text.length > 120) {
+    suggestions.push("可以给关键短语加粗，例如兼容型号、核心功能或替换周期。");
+  }
+
+  return suggestions.slice(0, 5);
+}
+
 const exampleHtml = `
 <p><b>Premium Replacement Vacuum Filter Kit</b></p>
 <p>Designed for daily home cleaning and long-term machine protection.</p>
@@ -160,6 +207,7 @@ export default function AmazonHtmlConverter() {
   const [amazonHtml, setAmazonHtml] = useState("");
   const [formattedHtml, setFormattedHtml] = useState("");
   const [plainTextLength, setPlainTextLength] = useState(0);
+  const aiSuggestions = getAiSuggestions(amazonHtml);
 
   useEffect(() => {
     const cleaned = sanitizeAmazonHtml(rawHtml);
@@ -441,6 +489,21 @@ export default function AmazonHtmlConverter() {
               <div className="flex items-center justify-between border-t bg-slate-50 px-5 py-3 text-xs text-slate-500">
                 <span>输出不生成 h1 / h2 / h3 等标题标签。</span>
                 <button onClick={copyHtml} disabled={!formattedHtml} className="font-medium text-brand disabled:text-slate-400">复制代码</button>
+              </div>
+              <div className="border-t bg-white px-5 py-4">
+                <div className="mb-3 flex items-center justify-between">
+                  <div className="flex items-center text-sm font-semibold text-slate-800">
+                    <Sparkles className="mr-2 h-4 w-4 text-brand" />AI 实时建议
+                  </div>
+                  <Badge variant="outline" className="rounded-full bg-slate-50 text-[11px]">本地规则</Badge>
+                </div>
+                <ul className="space-y-2 text-xs leading-5 text-slate-600">
+                  {aiSuggestions.map((suggestion) => (
+                    <li key={suggestion} className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2">
+                      {suggestion}
+                    </li>
+                  ))}
+                </ul>
               </div>
             </CardContent>
           </Card>
