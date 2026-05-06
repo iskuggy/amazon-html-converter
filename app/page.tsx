@@ -268,8 +268,8 @@ export default function AmazonHtmlConverter() {
           </div>
         </section>
 
-        <Card className="mb-5 rounded-3xl border-slate-200 shadow-sm">
-          <CardContent className="flex flex-wrap items-center gap-2 p-3">
+        <Card className="relative z-30 mb-5 overflow-visible rounded-3xl border-slate-200 shadow-sm">
+          <CardContent className="flex flex-wrap items-center gap-2 overflow-visible p-3">
             <span className="px-2 text-sm font-medium text-slate-500">格式工具</span>
             <Separator orientation="vertical" className="mx-1 h-6" />
             <Button variant="ghost" size="sm" onClick={() => runCommand("formatBlock", "p")} className="rounded-xl">
@@ -303,7 +303,7 @@ export default function AmazonHtmlConverter() {
               </Button>
               {emojiOpen ? (
                 <div
-                  className="absolute left-0 top-11 z-20 w-[min(380px,calc(100vw-3rem))] rounded-2xl border border-slate-200 bg-white p-3 shadow-xl"
+                  className="absolute left-0 top-full z-50 mt-2 w-[min(380px,calc(100vw-3rem))] rounded-2xl border border-slate-200 bg-white p-3 shadow-xl"
                   onMouseDown={(event) => event.preventDefault()}
                 >
                   {emojiGroups.map((group) => (
