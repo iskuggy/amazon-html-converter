@@ -92,11 +92,31 @@ const exampleHtml = `
 <p>For best performance, replace the filter every 2-3 months depending on usage.</p>
 `;
 
+const emojiGroups = [
+  {
+    title: "卖点",
+    emojis: ["✅", "⭐", "🔥", "💡", "👍", "💪", "🏆", "💎"],
+  },
+  {
+    title: "物流",
+    emojis: ["🚚", "📦", "🎁", "🛒", "⏱️", "🌍"],
+  },
+  {
+    title: "提示",
+    emojis: ["⚠️", "❌", "🔔", "📌", "🔍", "📏"],
+  },
+  {
+    title: "方向",
+    emojis: ["➡️", "⬅️", "⬆️", "⬇️", "↗️", "↘️", "🔼", "🔽", "▶️", "◀️", "🔁", "🔄", "➤", "→", "✔", "★"],
+  },
+];
+
 export default function AmazonHtmlConverter() {
   const editorRef = useRef<HTMLDivElement>(null);
   const savedRangeRef = useRef<Range | null>(null);
   const [rawHtml, setRawHtml] = useState("");
   const [copied, setCopied] = useState(false);
+  const [emojiOpen, setEmojiOpen] = useState(false);
 
   const [amazonHtml, setAmazonHtml] = useState("");
   const [formattedHtml, setFormattedHtml] = useState("");
@@ -141,10 +161,11 @@ export default function AmazonHtmlConverter() {
     setRawHtml(editorRef.current?.innerHTML || "");
   };
 
-  const insertEmoji = () => {
+  const insertEmoji = (emoji: string) => {
     restoreSelection();
-    document.execCommand("insertText", false, " ✓ ");
+    document.execCommand("insertText", false, emoji);
     setRawHtml(editorRef.current?.innerHTML || "");
+    setEmojiOpen(false);
   };
 
   const pasteAsPlainText = async () => {
@@ -270,9 +291,42 @@ export default function AmazonHtmlConverter() {
             </Button>
             <Separator orientation="vertical" className="mx-1 h-6" />
             <Button variant="ghost" size="sm" onClick={insertLineBreak} className="rounded-xl">插入换行</Button>
-            <Button variant="ghost" size="sm" onClick={insertEmoji} className="rounded-xl">
-              <Smile className="mr-2 h-4 w-4" />插入 ✓
-            </Button>
+            <div className="relative">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setEmojiOpen((open) => !open)}
+                className="rounded-xl"
+                aria-expanded={emojiOpen}
+              >
+                <Smile className="mr-2 h-4 w-4" />Emoji
+              </Button>
+              {emojiOpen ? (
+                <div
+                  className="absolute left-0 top-11 z-20 w-[min(380px,calc(100vw-3rem))] rounded-2xl border border-slate-200 bg-white p-3 shadow-xl"
+                  onMouseDown={(event) => event.preventDefault()}
+                >
+                  {emojiGroups.map((group) => (
+                    <div key={group.title} className="mb-3 last:mb-0">
+                      <div className="mb-2 px-1 text-xs font-medium text-slate-500">{group.title}</div>
+                      <div className="grid grid-cols-8 gap-1.5">
+                        {group.emojis.map((emoji) => (
+                          <button
+                            key={`${group.title}-${emoji}`}
+                            type="button"
+                            onClick={() => insertEmoji(emoji)}
+                            className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-lg transition hover:border-brand hover:bg-slate-50"
+                            aria-label={`插入 ${emoji}`}
+                          >
+                            {emoji}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+            </div>
             <Button variant="ghost" size="sm" onClick={pasteAsPlainText} className="rounded-xl">
               <RotateCcw className="mr-2 h-4 w-4" />剪贴板转纯文本
             </Button>
