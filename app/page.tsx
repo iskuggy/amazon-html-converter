@@ -8,6 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 
 const ALLOWED_TAGS = ["p", "br", "ul", "ol", "li", "b", "strong", "i", "em"];
+const BLOCK_TAGS = ["p", "div", "section", "article", "ul", "ol", "li", "h1", "h2", "h3", "h4", "h5", "h6"];
+const TOP_LEVEL_BLOCK_TAGS = ["p", "ul", "ol"];
 
 function sanitizeAmazonHtml(html: string) {
   if (!html) return "";
@@ -25,7 +27,14 @@ function sanitizeAmazonHtml(html: string) {
 
     let mappedTag = tag;
     if (["h1", "h2", "h3", "h4", "h5", "h6"].includes(tag)) mappedTag = "p";
-    if (tag === "div" || tag === "section" || tag === "article") mappedTag = "p";
+    if (tag === "div" || tag === "section" || tag === "article") {
+      mappedTag = [...el.childNodes].some((child) => child.nodeType === Node.ELEMENT_NODE && BLOCK_TAGS.includes((child as Element).tagName.toLowerCase()))
+        ? "fragment"
+        : "p";
+    }
+    if (tag === "p" && [...el.childNodes].some((child) => child.nodeType === Node.ELEMENT_NODE && ["ul", "ol", "p"].includes((child as Element).tagName.toLowerCase()))) {
+      mappedTag = "fragment";
+    }
     if (tag === "span") mappedTag = "fragment";
     if (tag === "strong") mappedTag = "b";
     if (tag === "em") mappedTag = "i";
@@ -56,7 +65,35 @@ function sanitizeAmazonHtml(html: string) {
   const cleanRoot = doc.createElement("div");
   [...root.childNodes].forEach((child) => cleanRoot.appendChild(walk(child)));
 
-  cleanRoot.querySelectorAll("p, li").forEach((node) => {
+  const normalizedRoot = doc.createElement("div");
+  let paragraph: HTMLElement | null = null;
+  const flushParagraph = () => {
+    if (!paragraph) return;
+    const hasBreak = paragraph.querySelector("br");
+    const hasText = (paragraph.textContent?.trim().length ?? 0) > 0;
+    if (hasBreak || hasText) {
+      normalizedRoot.appendChild(paragraph);
+    }
+    paragraph = null;
+  };
+
+  [...cleanRoot.childNodes].forEach((child) => {
+    if (child.nodeType === Node.ELEMENT_NODE && TOP_LEVEL_BLOCK_TAGS.includes((child as Element).tagName.toLowerCase())) {
+      flushParagraph();
+      normalizedRoot.appendChild(child);
+      return;
+    }
+
+    if (child.nodeType === Node.TEXT_NODE && !child.textContent?.trim()) {
+      return;
+    }
+
+    paragraph ??= doc.createElement("p");
+    paragraph.appendChild(child);
+  });
+  flushParagraph();
+
+  normalizedRoot.querySelectorAll("p, li").forEach((node) => {
     const hasBreak = node.querySelector("br");
     const hasText = (node.textContent?.trim().length ?? 0) > 0;
     if (!hasText && !hasBreak) {
@@ -64,7 +101,7 @@ function sanitizeAmazonHtml(html: string) {
     }
   });
 
-  return cleanRoot.innerHTML
+  return normalizedRoot.innerHTML
     .replace(/\s+<\/li>/g, "</li>")
     .replace(/>\s+</g, "><")
     .trim();
@@ -142,30 +179,51 @@ export default function AmazonHtmlConverter() {
   const restoreSelection = () => {
     if (!editorRef.current) return;
     editorRef.current.focus();
-    if (!savedRangeRef.current) return;
     const selection = window.getSelection();
     if (!selection) return;
     selection.removeAllRanges();
-    selection.addRange(savedRangeRef.current);
+
+    if (savedRangeRef.current) {
+      try {
+        selection.addRange(savedRangeRef.current);
+        return;
+      } catch {
+        savedRangeRef.current = null;
+      }
+    }
+
+    const range = document.createRange();
+    range.selectNodeContents(editorRef.current);
+    range.collapse(false);
+    selection.addRange(range);
+    savedRangeRef.current = range.cloneRange();
   };
 
   const runCommand = (command: string, value: string | undefined = undefined) => {
     restoreSelection();
     document.execCommand(command, false, value ?? "");
     setRawHtml(editorRef.current?.innerHTML || "");
+    saveSelection();
   };
 
   const insertLineBreak = () => {
     restoreSelection();
     document.execCommand("insertHTML", false, "<br>");
     setRawHtml(editorRef.current?.innerHTML || "");
+    saveSelection();
   };
 
   const insertEmoji = (emoji: string) => {
     restoreSelection();
     document.execCommand("insertText", false, emoji);
     setRawHtml(editorRef.current?.innerHTML || "");
+    saveSelection();
     setEmojiOpen(false);
+  };
+
+  const keepEditorSelection = (event: React.MouseEvent<HTMLElement>) => {
+    event.preventDefault();
+    saveSelection();
   };
 
   const pasteAsPlainText = async () => {
@@ -223,14 +281,10 @@ export default function AmazonHtmlConverter() {
   };
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    if (event.key !== "Enter") return;
+    if (event.key !== "Enter" || !event.shiftKey) return;
     event.preventDefault();
-    if (event.shiftKey) {
-      document.execCommand("insertHTML", false, "<br>");
-    } else {
-      document.execCommand("formatBlock", false, "p");
-    }
-    setRawHtml(editorRef.current?.innerHTML || "");
+    document.execCommand("insertHTML", false, "<br>");
+    window.setTimeout(onInput, 0);
   };
 
   return (
@@ -272,29 +326,30 @@ export default function AmazonHtmlConverter() {
           <CardContent className="flex flex-wrap items-center gap-2 overflow-visible p-3">
             <span className="px-2 text-sm font-medium text-slate-500">格式工具</span>
             <Separator orientation="vertical" className="mx-1 h-6" />
-            <Button variant="ghost" size="sm" onClick={() => runCommand("formatBlock", "p")} className="rounded-xl">
+            <Button variant="ghost" size="sm" onMouseDown={keepEditorSelection} onClick={() => runCommand("formatBlock", "p")} className="rounded-xl">
               <Pilcrow className="mr-2 h-4 w-4" />普通段落
             </Button>
             <Separator orientation="vertical" className="mx-1 h-6" />
-            <Button variant="ghost" size="sm" onClick={() => runCommand("bold")} className="rounded-xl">
+            <Button variant="ghost" size="sm" onMouseDown={keepEditorSelection} onClick={() => runCommand("bold")} className="rounded-xl">
               <Bold className="mr-2 h-4 w-4" />加粗
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => runCommand("italic")} className="rounded-xl">
+            <Button variant="ghost" size="sm" onMouseDown={keepEditorSelection} onClick={() => runCommand("italic")} className="rounded-xl">
               <Italic className="mr-2 h-4 w-4" />斜体
             </Button>
             <Separator orientation="vertical" className="mx-1 h-6" />
-            <Button variant="ghost" size="sm" onClick={() => runCommand("insertUnorderedList")} className="rounded-xl">
+            <Button variant="ghost" size="sm" onMouseDown={keepEditorSelection} onClick={() => runCommand("insertUnorderedList")} className="rounded-xl">
               <List className="mr-2 h-4 w-4" />项目符号
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => runCommand("insertOrderedList")} className="rounded-xl">
+            <Button variant="ghost" size="sm" onMouseDown={keepEditorSelection} onClick={() => runCommand("insertOrderedList")} className="rounded-xl">
               <ListOrdered className="mr-2 h-4 w-4" />编号列表
             </Button>
             <Separator orientation="vertical" className="mx-1 h-6" />
-            <Button variant="ghost" size="sm" onClick={insertLineBreak} className="rounded-xl">插入换行</Button>
+            <Button variant="ghost" size="sm" onMouseDown={keepEditorSelection} onClick={insertLineBreak} className="rounded-xl">插入换行</Button>
             <div className="relative">
               <Button
                 variant="ghost"
                 size="sm"
+                onMouseDown={keepEditorSelection}
                 onClick={() => setEmojiOpen((open) => !open)}
                 className="rounded-xl"
                 aria-expanded={emojiOpen}
