@@ -148,6 +148,8 @@ const emojiGroups = [
   },
 ];
 
+const quickEmojis = ["✅", "⭐", "🔥", "💡", "👍", "🚚", "📦", "⚠️", "➡️"];
+
 export default function AmazonHtmlConverter() {
   const editorRef = useRef<HTMLDivElement>(null);
   const savedRangeRef = useRef<Range | null>(null);
@@ -348,43 +350,6 @@ export default function AmazonHtmlConverter() {
                 </Button>
                 <Separator orientation="vertical" className="mx-1 h-6" />
                 <Button variant="ghost" size="sm" onMouseDown={keepEditorSelection} onClick={insertLineBreak} className="rounded-lg">换行</Button>
-                <div className="relative">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onMouseDown={keepEditorSelection}
-                    onClick={() => setEmojiOpen((open) => !open)}
-                    className="rounded-lg"
-                    aria-expanded={emojiOpen}
-                  >
-                    <Smile className="mr-2 h-4 w-4" />Emoji
-                  </Button>
-                  {emojiOpen ? (
-                    <div
-                      className="absolute left-0 top-full z-50 mt-2 w-[min(380px,calc(100vw-3rem))] rounded-2xl border border-slate-200 bg-white p-3 shadow-xl"
-                      onMouseDown={(event) => event.preventDefault()}
-                    >
-                      {emojiGroups.map((group) => (
-                        <div key={group.title} className="mb-3 last:mb-0">
-                          <div className="mb-2 px-1 text-xs font-medium text-slate-500">{group.title}</div>
-                          <div className="grid grid-cols-8 gap-1.5">
-                            {group.emojis.map((emoji) => (
-                              <button
-                                key={`${group.title}-${emoji}`}
-                                type="button"
-                                onClick={() => insertEmoji(emoji)}
-                                className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-lg transition hover:border-brand hover:bg-slate-50"
-                                aria-label={`插入 ${emoji}`}
-                              >
-                                {emoji}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : null}
-                </div>
                 <Button variant="ghost" size="sm" onClick={pasteAsPlainText} className="rounded-lg">
                   <RotateCcw className="mr-2 h-4 w-4" />剪贴板转纯文本
                 </Button>
@@ -408,15 +373,67 @@ export default function AmazonHtmlConverter() {
             </CardContent>
           </Card>
 
-          <Card className="overflow-hidden rounded-3xl border-slate-200 shadow-sm">
-            <CardHeader className="flex flex-row items-start justify-between border-b bg-white px-5 py-4">
+          <Card className="relative z-40 overflow-visible rounded-3xl border-slate-200 shadow-sm">
+            <CardHeader className="flex flex-row items-start justify-between bg-white px-5 py-4">
               <div>
                 <CardTitle className="text-base">亚马逊 HTML</CardTitle>
                 <p className="mt-1 text-xs text-slate-500">已过滤标题、样式、脚本和不推荐标签</p>
               </div>
               <Badge variant="outline" className="rounded-full">{plainTextLength} 字符</Badge>
             </CardHeader>
-            <CardContent className="p-0">
+            <CardContent className="overflow-visible p-0">
+              <div className="flex flex-wrap items-center gap-1.5 border-y border-slate-200 bg-slate-50 px-3 py-2">
+                <span className="px-2 text-xs font-medium text-slate-500">常用 Emoji</span>
+                {quickEmojis.map((emoji) => (
+                  <button
+                    key={emoji}
+                    type="button"
+                    onMouseDown={keepEditorSelection}
+                    onClick={() => insertEmoji(emoji)}
+                    className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-base transition hover:border-brand hover:bg-white"
+                    aria-label={`插入 ${emoji}`}
+                  >
+                    {emoji}
+                  </button>
+                ))}
+                <div className="relative">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onMouseDown={keepEditorSelection}
+                    onClick={() => setEmojiOpen((open) => !open)}
+                    className="rounded-lg"
+                    aria-expanded={emojiOpen}
+                  >
+                    <Smile className="mr-2 h-4 w-4" />更多
+                  </Button>
+                  {emojiOpen ? (
+                    <div
+                      className="absolute right-0 top-full z-50 mt-2 w-[min(380px,calc(100vw-3rem))] rounded-2xl border border-slate-200 bg-white p-3 shadow-xl"
+                      onMouseDown={(event) => event.preventDefault()}
+                    >
+                      {emojiGroups.map((group) => (
+                        <div key={group.title} className="mb-3 last:mb-0">
+                          <div className="mb-2 px-1 text-xs font-medium text-slate-500">{group.title}</div>
+                          <div className="grid grid-cols-8 gap-1.5">
+                            {group.emojis.map((emoji) => (
+                              <button
+                                key={`${group.title}-${emoji}`}
+                                type="button"
+                                onClick={() => insertEmoji(emoji)}
+                                className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-lg transition hover:border-brand hover:bg-slate-50"
+                                aria-label={`插入 ${emoji}`}
+                              >
+                                {emoji}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : null}
+                </div>
+              </div>
               <pre className="min-h-[420px] overflow-y-auto whitespace-pre-wrap break-words bg-slate-950 px-5 py-4 text-sm leading-6 text-slate-100">
                 <code>{formattedHtml || "<!-- 转换后的 Amazon HTML 将显示在这里 -->"}</code>
               </pre>
