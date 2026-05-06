@@ -422,7 +422,7 @@ export default function AmazonHtmlConverter() {
               <Badge variant="outline" className="rounded-full">{plainTextLength} 字符</Badge>
             </CardHeader>
             <CardContent className="p-0">
-              <pre className="min-h-[420px] overflow-auto bg-slate-950 px-5 py-4 text-sm leading-6 text-slate-100">
+              <pre className="min-h-[420px] overflow-y-auto whitespace-pre-wrap break-words bg-slate-950 px-5 py-4 text-sm leading-6 text-slate-100">
                 <code>{formattedHtml || "<!-- 转换后的 Amazon HTML 将显示在这里 -->"}</code>
               </pre>
               <div className="flex items-center justify-between border-t bg-slate-50 px-5 py-3 text-xs text-slate-500">
