@@ -376,8 +376,8 @@ export default function AmazonHtmlConverter() {
           </div>
         </section>
 
-        <section className="grid gap-5 lg:grid-cols-2">
-          <Card className="relative z-30 overflow-visible rounded-3xl border-slate-200 shadow-sm">
+        <section className="grid min-w-0 gap-5 lg:grid-cols-2">
+          <Card className="relative z-30 min-w-0 overflow-visible rounded-3xl border-slate-200 shadow-sm">
             <CardHeader className="flex flex-row items-start justify-between bg-white px-5 py-4">
               <div>
                 <CardTitle className="text-base">粘贴文案</CardTitle>
@@ -413,7 +413,7 @@ export default function AmazonHtmlConverter() {
                 onMouseUp={saveSelection}
                 onKeyUp={saveSelection}
                 onBlur={saveSelection}
-                className="min-h-[420px] w-full bg-white px-5 py-4 text-sm leading-7 outline-none empty:before:text-slate-400 empty:before:content-[attr(data-placeholder)] [&_b]:font-semibold [&_i]:italic [&_li]:my-1 [&_li]:pl-1 [&_ol]:my-3 [&_ol]:ml-7 [&_ol]:list-decimal [&_p]:my-2 [&_ul]:my-3 [&_ul]:ml-7 [&_ul]:list-disc"
+                className="min-h-[420px] w-full min-w-0 overflow-x-hidden break-words bg-white px-5 py-4 text-sm leading-7 outline-none [overflow-wrap:anywhere] empty:before:text-slate-400 empty:before:content-[attr(data-placeholder)] [&_*]:break-words [&_*]:[overflow-wrap:anywhere] [&_b]:font-semibold [&_i]:italic [&_li]:my-1 [&_li]:pl-1 [&_ol]:my-3 [&_ol]:ml-7 [&_ol]:list-decimal [&_p]:my-2 [&_ul]:my-3 [&_ul]:ml-7 [&_ul]:list-disc"
                 data-placeholder="在这里粘贴产品描述、Bullet Points 或 A+ 文案..."
               />
               <div className="border-t bg-slate-50 px-5 py-3 text-xs text-slate-500">
@@ -422,7 +422,7 @@ export default function AmazonHtmlConverter() {
             </CardContent>
           </Card>
 
-          <Card className="relative z-40 overflow-visible rounded-3xl border-slate-200 shadow-sm">
+          <Card className="relative z-40 min-w-0 overflow-visible rounded-3xl border-slate-200 shadow-sm">
             <CardHeader className="flex flex-row items-start justify-between bg-white px-5 py-4">
               <div>
                 <CardTitle className="text-base">亚马逊 HTML</CardTitle>
@@ -483,7 +483,7 @@ export default function AmazonHtmlConverter() {
                   ) : null}
                 </div>
               </div>
-              <pre className="min-h-[420px] overflow-y-auto whitespace-pre-wrap break-words bg-slate-950 px-5 py-4 text-sm leading-6 text-slate-100">
+              <pre className="min-h-[420px] max-w-full overflow-x-hidden overflow-y-auto whitespace-pre-wrap break-words bg-slate-950 px-5 py-4 text-sm leading-6 text-slate-100 [overflow-wrap:anywhere]">
                 <code>{formattedHtml || "<!-- 转换后的 Amazon HTML 将显示在这里 -->"}</code>
               </pre>
               <div className="flex items-center justify-between border-t bg-slate-50 px-5 py-3 text-xs text-slate-500">
@@ -520,12 +520,12 @@ export default function AmazonHtmlConverter() {
             <Badge variant="secondary" className="rounded-full">实时预览</Badge>
           </CardHeader>
           <CardContent className="bg-white p-6">
-            <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
-              <div className="rounded-2xl border border-slate-200 bg-white p-6">
+            <div className="grid min-w-0 gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
+              <div className="min-w-0 rounded-2xl border border-slate-200 bg-white p-6">
                 <h2 className="mb-4 border-b pb-3 text-lg font-semibold text-slate-900">Product Description</h2>
                 {amazonHtml ? (
                   <div
-                    className="amazon-preview text-sm leading-7 text-slate-800 [&_b]:font-semibold [&_i]:italic [&_li]:mb-1 [&_ol]:ml-5 [&_ol]:list-decimal [&_p]:mb-3 [&_ul]:ml-5 [&_ul]:list-disc"
+                    className="amazon-preview break-words text-sm leading-7 text-slate-800 [overflow-wrap:anywhere] [&_*]:break-words [&_*]:[overflow-wrap:anywhere] [&_b]:font-semibold [&_i]:italic [&_li]:mb-1 [&_ol]:ml-5 [&_ol]:list-decimal [&_p]:mb-3 [&_ul]:ml-5 [&_ul]:list-disc"
                     dangerouslySetInnerHTML={{ __html: amazonHtml }}
                   />
                 ) : (
@@ -535,7 +535,7 @@ export default function AmazonHtmlConverter() {
                 )}
               </div>
 
-              <aside className="rounded-2xl border border-slate-200 bg-white p-4">
+              <aside className="min-w-0 rounded-2xl border border-slate-200 bg-white p-4">
                 <div className="mb-3 flex items-center text-sm font-semibold text-slate-800">
                   <Smartphone className="mr-2 h-4 w-4" />手机 App 端预览
                 </div>
@@ -554,7 +554,7 @@ export default function AmazonHtmlConverter() {
                       <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4">
                         {amazonHtml ? (
                           <div
-                            className="text-[13px] leading-6 text-slate-800 [&_b]:font-semibold [&_i]:italic [&_li]:mb-1 [&_ol]:ml-5 [&_ol]:list-decimal [&_p]:mb-3 [&_ul]:ml-5 [&_ul]:list-disc"
+                            className="break-words text-[13px] leading-6 text-slate-800 [overflow-wrap:anywhere] [&_*]:break-words [&_*]:[overflow-wrap:anywhere] [&_b]:font-semibold [&_i]:italic [&_li]:mb-1 [&_ol]:ml-5 [&_ol]:list-decimal [&_p]:mb-3 [&_ul]:ml-5 [&_ul]:list-disc"
                             dangerouslySetInnerHTML={{ __html: amazonHtml }}
                           />
                         ) : (
