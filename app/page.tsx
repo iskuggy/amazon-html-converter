@@ -413,7 +413,7 @@ export default function AmazonHtmlConverter() {
                 onMouseUp={saveSelection}
                 onKeyUp={saveSelection}
                 onBlur={saveSelection}
-                className="min-h-[420px] w-full min-w-0 overflow-x-hidden break-words bg-white px-5 py-4 text-sm leading-7 outline-none [overflow-wrap:anywhere] empty:before:text-slate-400 empty:before:content-[attr(data-placeholder)] [&_*]:break-words [&_*]:[overflow-wrap:anywhere] [&_b]:font-semibold [&_i]:italic [&_li]:my-1 [&_li]:pl-1 [&_ol]:my-3 [&_ol]:ml-7 [&_ol]:list-decimal [&_p]:my-2 [&_ul]:my-3 [&_ul]:ml-7 [&_ul]:list-disc"
+                className="min-h-[420px] w-full min-w-0 overflow-x-hidden whitespace-pre-wrap break-words bg-white px-5 py-4 text-sm leading-7 outline-none [overflow-wrap:anywhere] [word-break:break-word] empty:before:text-slate-400 empty:before:content-[attr(data-placeholder)] [&_*]:break-words [&_*]:[overflow-wrap:anywhere] [&_*]:[word-break:break-word] [&_b]:font-semibold [&_i]:italic [&_li]:my-1 [&_li]:pl-1 [&_ol]:my-3 [&_ol]:ml-7 [&_ol]:list-decimal [&_p]:my-2 [&_ul]:my-3 [&_ul]:ml-7 [&_ul]:list-disc"
                 data-placeholder="在这里粘贴产品描述、Bullet Points 或 A+ 文案..."
               />
               <div className="border-t bg-slate-50 px-5 py-3 text-xs text-slate-500">
@@ -483,7 +483,7 @@ export default function AmazonHtmlConverter() {
                   ) : null}
                 </div>
               </div>
-              <pre className="min-h-[420px] max-w-full overflow-x-hidden overflow-y-auto whitespace-pre-wrap break-words bg-slate-950 px-5 py-4 text-sm leading-6 text-slate-100 [overflow-wrap:anywhere]">
+              <pre className="min-h-[420px] max-w-full overflow-x-hidden overflow-y-auto whitespace-pre-wrap break-words bg-slate-950 px-5 py-4 text-sm leading-6 text-slate-100 [overflow-wrap:anywhere] [word-break:break-word]">
                 <code>{formattedHtml || "<!-- 转换后的 Amazon HTML 将显示在这里 -->"}</code>
               </pre>
               <div className="flex items-center justify-between border-t bg-slate-50 px-5 py-3 text-xs text-slate-500">
@@ -525,7 +525,7 @@ export default function AmazonHtmlConverter() {
                 <h2 className="mb-4 border-b pb-3 text-lg font-semibold text-slate-900">Product Description</h2>
                 {amazonHtml ? (
                   <div
-                    className="amazon-preview break-words text-sm leading-7 text-slate-800 [overflow-wrap:anywhere] [&_*]:break-words [&_*]:[overflow-wrap:anywhere] [&_b]:font-semibold [&_i]:italic [&_li]:mb-1 [&_ol]:ml-5 [&_ol]:list-decimal [&_p]:mb-3 [&_ul]:ml-5 [&_ul]:list-disc"
+                    className="amazon-preview break-words text-sm leading-7 text-slate-800 [overflow-wrap:anywhere] [word-break:break-word] [&_*]:break-words [&_*]:[overflow-wrap:anywhere] [&_*]:[word-break:break-word] [&_b]:font-semibold [&_i]:italic [&_li]:mb-1 [&_ol]:ml-5 [&_ol]:list-decimal [&_p]:mb-3 [&_ul]:ml-5 [&_ul]:list-disc"
                     dangerouslySetInnerHTML={{ __html: amazonHtml }}
                   />
                 ) : (
@@ -554,7 +554,7 @@ export default function AmazonHtmlConverter() {
                       <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4">
                         {amazonHtml ? (
                           <div
-                            className="break-words text-[13px] leading-6 text-slate-800 [overflow-wrap:anywhere] [&_*]:break-words [&_*]:[overflow-wrap:anywhere] [&_b]:font-semibold [&_i]:italic [&_li]:mb-1 [&_ol]:ml-5 [&_ol]:list-decimal [&_p]:mb-3 [&_ul]:ml-5 [&_ul]:list-disc"
+                            className="break-words text-[13px] leading-6 text-slate-800 [overflow-wrap:anywhere] [word-break:break-word] [&_*]:break-words [&_*]:[overflow-wrap:anywhere] [&_*]:[word-break:break-word] [&_b]:font-semibold [&_i]:italic [&_li]:mb-1 [&_ol]:ml-5 [&_ol]:list-decimal [&_p]:mb-3 [&_ul]:ml-5 [&_ul]:list-disc"
                             dangerouslySetInnerHTML={{ __html: amazonHtml }}
                           />
                         ) : (
