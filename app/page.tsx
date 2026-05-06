@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { Copy, Trash2, FileText, Code2, Eye, Bold, Italic, List, ListOrdered, Pilcrow, Smile, RotateCcw } from "lucide-react";
+import { Copy, Trash2, FileText, Code2, Eye, Bold, Italic, List, ListOrdered, Smile, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -326,10 +326,6 @@ export default function AmazonHtmlConverter() {
           <CardContent className="flex flex-wrap items-center gap-2 overflow-visible p-3">
             <span className="px-2 text-sm font-medium text-slate-500">格式工具</span>
             <Separator orientation="vertical" className="mx-1 h-6" />
-            <Button variant="ghost" size="sm" onMouseDown={keepEditorSelection} onClick={() => runCommand("formatBlock", "p")} className="rounded-xl">
-              <Pilcrow className="mr-2 h-4 w-4" />普通段落
-            </Button>
-            <Separator orientation="vertical" className="mx-1 h-6" />
             <Button variant="ghost" size="sm" onMouseDown={keepEditorSelection} onClick={() => runCommand("bold")} className="rounded-xl">
               <Bold className="mr-2 h-4 w-4" />加粗
             </Button>
@@ -408,7 +404,7 @@ export default function AmazonHtmlConverter() {
                 onMouseUp={saveSelection}
                 onKeyUp={saveSelection}
                 onBlur={saveSelection}
-                className="min-h-[420px] w-full bg-white px-5 py-4 text-sm leading-7 outline-none empty:before:text-slate-400 empty:before:content-[attr(data-placeholder)]"
+                className="min-h-[420px] w-full bg-white px-5 py-4 text-sm leading-7 outline-none empty:before:text-slate-400 empty:before:content-[attr(data-placeholder)] [&_b]:font-semibold [&_i]:italic [&_li]:my-1 [&_li]:pl-1 [&_ol]:my-3 [&_ol]:ml-7 [&_ol]:list-decimal [&_p]:my-2 [&_ul]:my-3 [&_ul]:ml-7 [&_ul]:list-disc"
                 data-placeholder="在这里粘贴产品描述、Bullet Points 或 A+ 文案..."
               />
               <div className="border-t bg-slate-50 px-5 py-3 text-xs text-slate-500">
