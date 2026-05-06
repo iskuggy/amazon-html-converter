@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { Copy, Trash2, FileText, Code2, Eye, Bold, Italic, List, ListOrdered, Smile, RotateCcw } from "lucide-react";
+import { Copy, Trash2, FileText, Code2, Eye, Bold, Italic, List, ListOrdered, Smile, RotateCcw, Smartphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -444,18 +444,58 @@ export default function AmazonHtmlConverter() {
             <Badge variant="secondary" className="rounded-full">实时预览</Badge>
           </CardHeader>
           <CardContent className="bg-white p-6">
-            <div className="rounded-2xl border border-slate-200 bg-white p-6">
-              <h2 className="mb-4 border-b pb-3 text-lg font-semibold text-slate-900">Product Description</h2>
-              {amazonHtml ? (
-                <div
-                  className="amazon-preview text-sm leading-7 text-slate-800 [&_b]:font-semibold [&_i]:italic [&_li]:mb-1 [&_ol]:ml-5 [&_ol]:list-decimal [&_p]:mb-3 [&_ul]:ml-5 [&_ul]:list-disc"
-                  dangerouslySetInnerHTML={{ __html: amazonHtml }}
-                />
-              ) : (
-                <div className="flex min-h-[120px] items-center justify-center rounded-xl bg-slate-50 text-sm text-slate-400">
-                  预览内容将在这里显示
+            <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
+              <div className="rounded-2xl border border-slate-200 bg-white p-6">
+                <h2 className="mb-4 border-b pb-3 text-lg font-semibold text-slate-900">Product Description</h2>
+                {amazonHtml ? (
+                  <div
+                    className="amazon-preview text-sm leading-7 text-slate-800 [&_b]:font-semibold [&_i]:italic [&_li]:mb-1 [&_ol]:ml-5 [&_ol]:list-decimal [&_p]:mb-3 [&_ul]:ml-5 [&_ul]:list-disc"
+                    dangerouslySetInnerHTML={{ __html: amazonHtml }}
+                  />
+                ) : (
+                  <div className="flex min-h-[120px] items-center justify-center rounded-xl bg-slate-50 text-sm text-slate-400">
+                    预览内容将在这里显示
+                  </div>
+                )}
+              </div>
+
+              <aside className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                <div className="mb-3 flex items-center justify-between">
+                  <div className="flex items-center text-sm font-semibold text-slate-800">
+                    <Smartphone className="mr-2 h-4 w-4" />手机 App 端
+                  </div>
+                  <Badge variant="outline" className="rounded-full bg-white text-[11px]">iPhone 17</Badge>
                 </div>
-              )}
+                <div className="mx-auto w-full max-w-[318px] rounded-[2.25rem] bg-slate-950 p-2 shadow-2xl">
+                  <div className="relative aspect-[1206/2622] overflow-hidden rounded-[1.85rem] bg-white">
+                    <div className="absolute left-1/2 top-2 z-10 h-6 w-24 -translate-x-1/2 rounded-full bg-slate-950" />
+                    <div className="flex h-full flex-col">
+                      <div className="bg-[#F8FAFB] px-5 pb-3 pt-10">
+                        <div className="mb-4 flex items-center justify-between text-[11px] font-semibold text-slate-900">
+                          <span>9:41</span>
+                          <span className="tracking-tight">5G 100%</span>
+                        </div>
+                        <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
+                          <div className="text-[11px] font-medium uppercase tracking-wide text-slate-400">Amazon</div>
+                          <div className="mt-1 text-base font-semibold leading-tight text-slate-950">Product Description</div>
+                        </div>
+                      </div>
+                      <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4">
+                        {amazonHtml ? (
+                          <div
+                            className="text-[13px] leading-6 text-slate-800 [&_b]:font-semibold [&_i]:italic [&_li]:mb-1 [&_ol]:ml-5 [&_ol]:list-decimal [&_p]:mb-3 [&_ul]:ml-5 [&_ul]:list-disc"
+                            dangerouslySetInnerHTML={{ __html: amazonHtml }}
+                          />
+                        ) : (
+                          <div className="flex h-full min-h-[180px] items-center justify-center rounded-2xl bg-slate-50 px-4 text-center text-xs leading-5 text-slate-400">
+                            手机端预览内容将在这里显示
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </aside>
             </div>
           </CardContent>
         </Card>
