@@ -1,0 +1,9 @@
+name = "amazon-html-converter"
+compatibility_date = "2026-01-01"
+
+routes = [
+  { pattern = "listing.hongweiju.com", custom_domain = true }
+]
+
+[assets]
+directory = "./dist"
